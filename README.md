@@ -6,3 +6,6 @@ You can use any token you would like for minting $USDC is just my recommendation
 (sub-duration is set to 1 day and safeMint() as well as resubscribe() costs are set to 0, so no need for USDC).
 
 This contract differs from the basic contract i uploaded in february because the "old" one was (as stated in the README) very restricted in the functionality as it worked without using metadata and was not very useful for professional or commercial use. Now, this contract can be used e.g. with the collab.land bot that is widely used for web3 discord communities.
+
+
+Please note that i cannot upload the whole project including the frontend and hardhat config yet. The code that is not deployed onchain is owned by POLARFI.IO and will not be shared until release, when i will release it on the official polarfi github.
