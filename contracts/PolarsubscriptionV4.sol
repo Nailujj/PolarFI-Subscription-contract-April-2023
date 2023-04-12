@@ -2,13 +2,14 @@
 pragma solidity ^0.8.9;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
+
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./referral.sol";
+import "./Referral.sol";
 import "./Storage.sol";
 
 contract PolarSubscriptionV4 is ERC721URIStorage, ERC721Enumerable, Pausable, Ownable, Storage, Referral, AutomationCompatibleInterface {
@@ -139,7 +140,7 @@ contract PolarSubscriptionV4 is ERC721URIStorage, ERC721Enumerable, Pausable, Ow
 
 //WITHDRAWALS
     function userWithdrawReferral()public {
-        _verifyUser(msg.sender);
+        _verifyUser();
         uint balance = referralDB[msg.sender].balance;
         referralDB[msg.sender].balance = 0;
         tokenAddress.transfer(msg.sender, balance*10**18);
@@ -158,8 +159,6 @@ contract PolarSubscriptionV4 is ERC721URIStorage, ERC721Enumerable, Pausable, Ow
     function unpause() public onlyOwner {
         _unpause();
     }
-
-
 
 // The following functions are overrides required by Solidity.
     function supportsInterface(bytes4 interfaceId)
@@ -196,7 +195,40 @@ contract PolarSubscriptionV4 is ERC721URIStorage, ERC721Enumerable, Pausable, Ow
     }
    
 
-//Manually set subscription status of token to false (mainly used for tests)
+
+
+
+//THESE FUNCTIONS INCLUDE JUST THE LOGIC OF THE CHAINLINK AUTOMATION FOR TESTING. DO NOT USE THESE IN PRODUCTION
+
+    function checkUpkeep2()
+        external
+        view
+        onlyOwner
+        returns (bool upkeepNeeded)
+    {
+
+        upkeepNeeded = false;
+        uint256 counter;
+
+        for(uint i; i < _tokenIdCounter.current(); i++){
+            if(idToTime[i] + 35 days < block.timestamp && isSubscribed[i] == true){
+                upkeepNeeded = true;
+                counter++;
+            }
+        }
+        
+        uint256[] memory toBeUpdated = new uint256[](counter);
+        uint zaehler;
+
+        for(uint i; i < _tokenIdCounter.current(); i++){
+            if(idToTime[i] + 35 days < block.timestamp && isSubscribed[i] == true){
+                toBeUpdated[zaehler] = i;
+                zaehler++;
+            }
+        }
+        return (upkeepNeeded);
+    }
+    
 
     function performUpkeep2(uint _id) external onlyOwner {
             _setTokenURI(_id, IpfsUri[1]);

@@ -25,9 +25,8 @@ contract Referral is Ownable {
         referralDB[referral].balance += referralValue/(10**18);
     }
 
-    function _verifyUser(address _withdrawer) internal view {
+    function _verifyUser() internal view {
         require(referralDB[msg.sender].balance != 0, "You do not have referral Balance");
-        //require(frost.balanceOf(_withdrawer) >= referralDB[_withdrawer].balance/10, "Didnt meet requirements"); //THIS SHOULD BE CHANGED TO ACTUAL PRICE, NOT AMOUNT
         require(referralDB[msg.sender].isBlacklisted == false, "This wallet is blacklisted. Request support");
     }
 
