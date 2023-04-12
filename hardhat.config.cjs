@@ -9,13 +9,13 @@ module.exports = {
   networks: {
     bscTestnet :{
       url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      accounts: [secrets.account[0]],
+      accounts: [secrets.account[2]],
+      gasPrice: 10000000000, // 10 Gwei
+
     },
     mumbai: {
       url: "https://rpc-mumbai.maticvigil.com/",
-      accounts: [secrets.account[1]],
-      //gasPrice: 8000000000,
-      //gasLimit: 8000000000000
+      accounts: [secrets.account[1]]
     },
     hardhat: {
     },

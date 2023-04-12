@@ -26,7 +26,6 @@ async function main(){
   await contract.safeMint();
 }
 
-main();
 
 
 
